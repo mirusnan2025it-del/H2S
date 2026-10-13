@@ -2,6 +2,7 @@ services:
   - type: web
     name: h2s-smart-wristband
     runtime: python
+    plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app
     envVars:
