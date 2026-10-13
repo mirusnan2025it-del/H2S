@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#082b3b">
+    <title>H₂S Smart Wristband | Sign in</title>
+
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: #163247;
+            background: #f1f6f6;
+            font-synthesis: none;
+            text-rendering: optimizeLegibility;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-width: 320px;
+            min-height: 100vh;
+            margin: 0;
+            display: grid;
+            place-items: center;
+            padding: 36px 20px;
+            background:
+                radial-gradient(ellipse at 12% 12%, rgba(13, 148, 136, 0.12), transparent 34%),
+                radial-gradient(ellipse at 92% 90%, rgba(59, 130, 246, 0.1), transparent 30%),
+                #f1f6f6;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        .login-shell {
+            display: grid;
+            width: min(100%, 1000px);
+            min-height: 610px;
+            grid-template-columns: 1fr 0.92fr;
+            overflow: hidden;
+            border: 1px solid rgba(220, 232, 232, 0.9);
+            border-radius: 28px;
+            background: #fff;
+            box-shadow: 0 30px 90px rgba(19, 50, 71, 0.15);
+        }
+
+        .brand-panel {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            padding: 48px;
+            background: linear-gradient(145deg, #082b3b 0%, #0b5260 57%, #0d9488 100%);
+            color: white;
+        }
+
+        .brand-panel::before,
+        .brand-panel::after {
+            position: absolute;
+            right: -130px;
+            bottom: -180px;
+            width: 400px;
+            height: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            content: "";
+            pointer-events: none;
+        }
+
+        .brand-panel::after {
+            right: -80px;
+            bottom: -130px;
+            width: 300px;
+            height: 300px;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .brand-lockup,
+        .brand-message,
+        .brand-note {
+            position: relative;
+            z-index: 1;
+        }
+
+        .brand-lockup {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            font-size: 15px;
+            font-weight: 750;
+            letter-spacing: -0.2px;
+        }
+
+        .brand-mark {
+            display: grid;
+            width: 44px;
+            height: 44px;
+            place-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.24);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.14);
+            font-size: 22px;
+        }
+
+        .eyebrow {
+            margin: 0 0 16px;
+            color: #9af0dc;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .brand-message h1 {
+            max-width: 440px;
+            margin: 0;
+            font-size: clamp(34px, 4.4vw, 49px);
+            line-height: 1.08;
+            letter-spacing: -2px;
+        }
+
+        .brand-message > p {
+            max-width: 390px;
+            margin: 18px 0 28px;
+            color: rgba(255, 255, 255, 0.76);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .feature-list {
+            display: grid;
+            gap: 12px;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            color: rgba(255, 255, 255, 0.92);
+            font-size: 13px;
+        }
+
+        .feature-icon {
+            display: grid;
+            width: 28px;
+            height: 28px;
+            flex: 0 0 auto;
+            place-items: center;
+            border-radius: 9px;
+            background: rgba(255, 255, 255, 0.13);
+        }
+
+        .brand-note {
+            max-width: 420px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.17);
+            color: rgba(255, 255, 255, 0.67);
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .login-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 52px clamp(28px, 5vw, 58px);
+        }
+
+        .login-heading {
+            margin-bottom: 27px;
+        }
+
+        .login-heading .eyebrow {
+            margin-bottom: 9px;
+            color: #0d9488;
+        }
+
+        .login-heading h2 {
+            margin: 0;
+            color: #12354b;
+            font-size: 29px;
+            letter-spacing: -1px;
+        }
+
+        .login-heading p {
+            margin: 8px 0 0;
+            color: #758696;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .error {
+            margin-bottom: 18px;
+            padding: 12px 14px;
+            border: 1px solid #fecaca;
+            border-radius: 11px;
+            background: #fff1f0;
+            color: #a83232;
+            font-size: 13px;
+        }
+
+        .login-form {
+            display: grid;
+            gap: 9px;
+        }
+
+        .login-form label {
+            margin-top: 8px;
+            color: #294558;
+            font-size: 12px;
+            font-weight: 750;
+        }
+
+        .login-form input {
+            width: 100%;
+            min-height: 48px;
+            padding: 12px 14px;
+            border: 1px solid #dce5e9;
+            border-radius: 11px;
+            outline: none;
+            background: #fbfdfd;
+            color: #163247;
+            font-size: 14px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .login-form input::placeholder {
+            color: #9aa8b3;
+        }
+
+        .login-form input:focus {
+            border-color: #0d9488;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.12);
+        }
+
+        .submit-button {
+            min-height: 49px;
+            margin-top: 12px;
+            border: 0;
+            border-radius: 11px;
+            background: linear-gradient(100deg, #0d9488, #0e7490);
+            color: white;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 8px 16px rgba(13, 148, 136, 0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 11px 20px rgba(13, 148, 136, 0.27);
+        }
+
+        .submit-button:focus-visible,
+        .demo-button:focus-visible {
+            outline: 3px solid #73d9cb;
+            outline-offset: 3px;
+        }
+
+        .demo-section {
+            margin-top: 27px;
+            padding-top: 22px;
+            border-top: 1px solid #e9eeee;
+        }
+
+        .demo-title {
+            margin: 0 0 4px;
+            color: #294558;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .demo-caption {
+            margin: 0 0 14px;
+            color: #81909e;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .demo-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .demo-button {
+            min-height: 43px;
+            border: 1px solid #dce8e7;
+            border-radius: 10px;
+            background: #f5faf9;
+            color: #17675f;
+            font-size: 12px;
+            font-weight: 750;
+            cursor: pointer;
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .demo-button:hover {
+            border-color: #9bd8d0;
+            background: #eaf7f5;
+        }
+
+        .login-footnote {
+            margin: 19px 0 0;
+            color: #9aa6af;
+            font-size: 10px;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        @media (max-width: 760px) {
+            body {
+                padding: 18px 12px;
+            }
+
+            .login-shell {
+                max-width: 510px;
+                grid-template-columns: 1fr;
+                border-radius: 22px;
+            }
+
+            .brand-panel {
+                min-height: 290px;
+                padding: 28px;
+            }
+
+            .brand-message h1 {
+                font-size: 35px;
+            }
+
+            .brand-message > p {
+                margin: 12px 0 0;
+            }
+
+            .feature-list,
+            .brand-note {
+                display: none;
+            }
+
+            .login-panel {
+                padding: 32px 28px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .brand-panel {
+                min-height: 260px;
+                padding: 24px;
+            }
+
+            .login-panel {
+                padding: 28px 22px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="login-shell">
+        <section class="brand-panel" aria-label="Product introduction">
+            <div class="brand-lockup">
+                <span class="brand-mark" aria-hidden="true">🛡️</span>
+                <span>H₂S Smart Wristband</span>
+            </div>
+
+            <div class="brand-message">
+                <p class="eyebrow">Worker safety monitoring</p>
+                <h1>See the signal.<br>Support safer work.</h1>
+                <p>A clear, connected workspace for indicator-strip analysis, team records, and safe demonstrations.</p>
+                <ul class="feature-list">
+                    <li><span class="feature-icon" aria-hidden="true">📷</span>Visual strip analysis</li>
+                    <li><span class="feature-icon" aria-hidden="true">📊</span>Team activity and records</li>
+                    <li><span class="feature-icon" aria-hidden="true">🧪</span>Safe simulation tools</li>
+                </ul>
+            </div>
+
+            <p class="brand-note">Prototype for demonstration and decision support. It does not directly measure gas concentration and is not a replacement for certified gas-monitoring equipment.</p>
+        </section>
+
+        <section class="login-panel" aria-labelledby="login-title">
+            <div class="login-heading">
+                <p class="eyebrow">Welcome back</p>
+                <h2 id="login-title">Sign in</h2>
+                <p>Use your account to open your safety workspace.</p>
+            </div>
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="error" role="alert">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form class="login-form" method="POST">
+                <label for="username">Username</label>
+                <input id="username" type="text" name="username" placeholder="Enter your username" autocomplete="username" required>
+
+                <label for="password">Password</label>
+                <input id="password" type="password" name="password" placeholder="Enter your password" autocomplete="current-password" required>
+
+                <button class="submit-button" type="submit">Continue to workspace <span aria-hidden="true">→</span></button>
+            </form>
+
+            <div class="demo-section">
+                <p class="demo-title">Explore the demo</p>
+                <p class="demo-caption">Quick-fill a seeded demo account. Select a role, then continue.</p>
+                <div class="demo-buttons">
+                    <button class="demo-button" type="button" data-username="manager" data-password="manager123">Manager demo</button>
+                    <button class="demo-button" type="button" data-username="worker1" data-password="worker123">Worker demo</button>
+                </div>
+            </div>
+
+            <p class="login-footnote">Demo credentials are for local presentations only. Change or disable them before public deployment.</p>
+        </section>
+    </main>
+
+    <script>
+        const usernameInput = document.getElementById("username");
+        const passwordInput = document.getElementById("password");
+
+        document.querySelectorAll(".demo-button").forEach((button) => {
+            button.addEventListener("click", () => {
+                usernameInput.value = button.dataset.username;
+                passwordInput.value = button.dataset.password;
+                usernameInput.dispatchEvent(new Event("input", { bubbles: true }));
+                passwordInput.dispatchEvent(new Event("input", { bubbles: true }));
+                passwordInput.focus();
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}
+        H₂S Smart Wristband
+        {% endblock %}
+    </title>
+
+    <!-- Main CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}?v=1">
+
+</head>
+
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+
+    <nav class="navbar">
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                🛡️
+            </div>
+
+            <div>
+
+                <h2>
+                    H₂S Smart Wristband
+                </h2>
+
+                <p>
+                    Worker Safety System
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Navigation -->
+
+        <div class="nav-links">
+
+            {% if session.get("user_id") %}
+
+                {% if session.get("role") == "manager" %}
+
+                    <a href="{{ url_for('manager_dashboard') }}">
+                        Dashboard
+                    </a>
+
+                {% else %}
+
+                    <a href="{{ url_for('worker_dashboard') }}">
+                        Dashboard
+                    </a>
+
+                {% endif %}
+
+
+                <a href="{{ url_for('detection') }}">
+                    Detection
+                </a>
+
+
+                <a href="{{ url_for('history') }}">
+                    History
+                </a>
+
+                <a href="{{ url_for('simulator') }}">
+                    Simulator
+                </a>
+
+
+                <a href="{{ url_for('logout') }}"
+                   class="logout">
+                    Logout
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </nav>
+
+
+    <!-- ================= PAGE CONTENT ================= -->
+
+    <main>
+
+        {% with messages = get_flashed_messages() %}
+
+            {% if messages %}
+
+                <div class="flash-container">
+
+                    {% for message in messages %}
+
+                        <div class="flash-message">
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        {% block content %}
+
+        {% endblock %}
+
+    </main>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <strong>
+            H₂S Smart Wristband
+        </strong>
+
+        <span>•</span>
+
+        Worker Safety Monitoring System
+
+        <p>
+            Visual strip analysis • Safety awareness • Personal records
+        </p>
+
+    </footer>
+
+
+</body>
+
+</html>

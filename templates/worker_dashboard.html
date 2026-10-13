@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Worker Dashboard | H₂S Smart Wristband</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        /* =====================================================
+           WORKER DASHBOARD
+        ===================================================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f3f7fb;
+            color: #102a43;
+        }
+
+
+        /* =====================================================
+           NAVBAR
+        ===================================================== */
+
+        .worker-navbar {
+            height: 72px;
+            background: white;
+            border-bottom: 1px solid #e3eaf0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 7%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .worker-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 800;
+            color: #102a43;
+        }
+
+        .brand-shield {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #159a9c, #1594df);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 5px 15px rgba(21, 154, 156, 0.25);
+        }
+
+        .worker-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .worker-nav-links a {
+            text-decoration: none;
+            color: #526579;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 10px 14px;
+            border-radius: 9px;
+            transition: 0.25s;
+        }
+
+        .worker-nav-links a:hover {
+            color: #087f8c;
+            background: #eef9f8;
+        }
+
+        .worker-nav-links .logout-link {
+            color: #c0392b;
+        }
+
+        .worker-nav-links .logout-link:hover {
+            background: #fff1ef;
+        }
+
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        .worker-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 45px 25px 60px;
+        }
+
+
+        /* =====================================================
+           WELCOME HERO
+        ===================================================== */
+
+        .worker-hero {
+            position: relative;
+            overflow: hidden;
+            border-radius: 28px;
+            padding: 42px 45px;
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #071b2d 0%,
+                    #0b3954 50%,
+                    #087f8c 100%
+                );
+
+            box-shadow:
+                0 15px 40px rgba(7, 27, 45, 0.18);
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .worker-hero::before {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.12);
+            right: -80px;
+            top: -130px;
+        }
+
+        .worker-hero::after {
+            content: "";
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 1px solid rgba(102,227,212,0.15);
+            right: 80px;
+            bottom: -110px;
+        }
+
+        .hero-text {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-small {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #66e3d4;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .worker-hero h1 {
+            margin: 0;
+            font-size: 40px;
+            line-height: 1.2;
+        }
+
+        .worker-hero p {
+            margin: 12px 0 0;
+            color: rgba(255,255,255,0.78);
+            font-size: 15px;
+        }
+
+        .hero-status {
+            position: relative;
+            z-index: 2;
+            min-width: 170px;
+            text-align: center;
+            padding: 20px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.10);
+            border: 1px solid rgba(255,255,255,0.18);
+            backdrop-filter: blur(8px);
+        }
+
+        .status-dot {
+            width: 15px;
+            height: 15px;
+            background: #55d88a;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 7px;
+            box-shadow: 0 0 0 5px rgba(85,216,138,0.15);
+        }
+
+        .hero-status strong {
+            display: block;
+            margin-top: 10px;
+            font-size: 18px;
+        }
+
+        .hero-status span {
+            font-size: 12px;
+            color: rgba(255,255,255,0.65);
+        }
+
+
+        /* =====================================================
+           WORKER INFORMATION
+        ===================================================== */
+
+        .dashboard-section {
+            margin-top: 32px;
+        }
+
+        .section-title {
+            margin-bottom: 17px;
+        }
+
+        .section-title span {
+            color: #159a9c;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .section-title h2 {
+            margin: 5px 0 0;
+            font-size: 24px;
+            color: #102a43;
+        }
+
+        .worker-info-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid #e4ebf0;
+            box-shadow: 0 8px 30px rgba(16,42,67,0.06);
+        }
+
+        .info-grid-new {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .info-box {
+            padding: 19px;
+            border-radius: 15px;
+            background: #f7fafc;
+            border: 1px solid #edf1f4;
+        }
+
+        .info-icon {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .info-label-new {
+            display: block;
+            font-size: 10px;
+            color: #8a98a6;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .info-value-new {
+            display: block;
+            font-size: 15px;
+            font-weight: 700;
+            color: #17324d;
+            word-break: break-word;
+        }
+
+
+        /* =====================================================
+           QUICK ACTIONS
+        ===================================================== */
+
+        .action-grid-new {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .action-card-new {
+            position: relative;
+            overflow: hidden;
+            background: white;
+            border-radius: 20px;
+            padding: 27px;
+            border: 1px solid #e4ebf0;
+            box-shadow: 0 8px 30px rgba(16,42,67,0.06);
+            transition: 0.3s;
+        }
+
+        .action-card-new:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(16,42,67,0.11);
+        }
+
+        .action-card-new::after {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            right: -50px;
+            bottom: -50px;
+            background: #eef9f8;
+        }
+
+        .action-icon-new {
+            width: 55px;
+            height: 55px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 27px;
+            margin-bottom: 17px;
+        }
+
+        .camera-action {
+            background: #e7f8f5;
+        }
+
+        .history-action {
+            background: #eaf1ff;
+        }
+
+        .simulator-action {
+            background: #fff5dc;
+        }
+
+        .action-card-new h3 {
+            margin: 0 0 8px;
+            color: #17324d;
+            font-size: 19px;
+        }
+
+        .action-card-new p {
+            margin: 0 0 20px;
+            color: #718096;
+            font-size: 13px;
+            line-height: 1.6;
+            min-height: 42px;
+        }
+
+        .action-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 800;
+            color: #087f8c;
+            position: relative;
+            z-index: 2;
+        }
+
+        .action-link:hover {
+            color: #065e68;
+        }
+
+
+        /* =====================================================
+           SAFETY NOTICE
+        ===================================================== */
+
+        .safety-box {
+            margin-top: 32px;
+            border-radius: 20px;
+            padding: 25px;
+            background: #fff9e9;
+            border: 1px solid #f1dfaa;
+            display: flex;
+            gap: 18px;
+            align-items: flex-start;
+        }
+
+        .safety-icon-new {
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+            border-radius: 15px;
+            background: #fff0c5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 25px;
+        }
+
+        .safety-content h3 {
+            margin: 0 0 8px;
+            color: #725b15;
+            font-size: 18px;
+        }
+
+        .safety-content p {
+            margin: 5px 0;
+            color: #806d31;
+            font-size: 13px;
+            line-height: 1.65;
+        }
+
+        .safety-highlight {
+            font-weight: 700;
+            color: #6c5511;
+        }
+
+
+        /* =====================================================
+           RESPONSIBLE USE
+        ===================================================== */
+
+        .responsible-card {
+            margin-top: 22px;
+            padding: 20px 23px;
+            background: #edf7ff;
+            border: 1px solid #d7eaf7;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .responsible-icon {
+            font-size: 27px;
+        }
+
+        .responsible-card strong {
+            color: #24518f;
+            font-size: 14px;
+        }
+
+        .responsible-card p {
+            margin: 4px 0 0;
+            color: #55708b;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        .worker-footer {
+            background: #071b2d;
+            color: #9eafbd;
+            padding: 25px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .worker-footer strong {
+            color: #66e3d4;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 900px) {
+
+            .worker-navbar {
+                padding: 0 4%;
+            }
+
+            .worker-nav-links {
+                gap: 2px;
+            }
+
+            .worker-nav-links a {
+                padding: 8px;
+                font-size: 12px;
+            }
+
+            .info-grid-new {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .action-grid-new {
+                grid-template-columns: 1fr;
+            }
+
+            .worker-hero {
+                padding: 35px;
+            }
+        }
+
+
+        @media (max-width: 650px) {
+
+            .worker-navbar {
+                height: auto;
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .worker-nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .worker-main {
+                padding: 25px 15px 40px;
+            }
+
+            .worker-hero {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 25px;
+                padding: 30px 25px;
+            }
+
+            .worker-hero h1 {
+                font-size: 30px;
+            }
+
+            .hero-status {
+                width: 100%;
+            }
+
+            .info-grid-new {
+                grid-template-columns: 1fr;
+            }
+
+            .safety-box {
+                flex-direction: column;
+            }
+
+            .responsible-card {
+                align-items: flex-start;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         NAVIGATION
+    ====================================================== -->
+
+    <nav class="worker-navbar">
+
+        <div class="worker-brand">
+
+            <div class="brand-shield">
+                🛡️
+            </div>
+
+            H₂S Smart Wristband
+
+        </div>
+
+
+        <div class="worker-nav-links">
+
+            <a href="{{ url_for('worker_dashboard') }}">
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('detection') }}">
+                Detection
+            </a>
+
+            <a href="{{ url_for('history') }}">
+                History
+            </a>
+
+            <a href="{{ url_for('simulator') }}">
+                Simulator
+            </a>
+
+            <a href="{{ url_for('logout') }}" class="logout-link">
+                Logout
+            </a>
+
+        </div>
+
+    </nav>
+
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <main class="worker-main">
+
+
+        <!-- =================================================
+             WELCOME HERO
+        ================================================== -->
+
+        <section class="worker-hero">
+
+            <div class="hero-text">
+
+                <div class="hero-small">
+                    Worker Safety Portal
+                </div>
+
+                <h1>
+                    Welcome, {{ user["name"] }} 👋
+                </h1>
+
+                <p>
+                    Monitor your indicator strip and review your
+                    personal safety records.
+                </p>
+
+            </div>
+
+
+            <div class="hero-status">
+
+                <span class="status-dot"></span>
+
+                <strong>
+                    SYSTEM READY
+                </strong>
+
+                <span>
+                    Safety monitoring portal
+                </span>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             WORKER INFORMATION
+        ================================================== -->
+
+        <section class="dashboard-section">
+
+            <div class="section-title">
+
+                <span>
+                    Your Profile
+                </span>
+
+                <h2>
+                    Worker Information
+                </h2>
+
+            </div>
+
+
+            <div class="worker-info-card">
+
+                <div class="info-grid-new">
+
+
+                    <!-- Name -->
+
+                    <div class="info-box">
+
+                        <div class="info-icon">
+                            👤
+                        </div>
+
+                        <span class="info-label-new">
+                            Name
+                        </span>
+
+                        <span class="info-value-new">
+                            {{ user["name"] }}
+                        </span>
+
+                    </div>
+
+
+                    <!-- Worker ID -->
+
+                    <div class="info-box">
+
+                        <div class="info-icon">
+                            🪪
+                        </div>
+
+                        <span class="info-label-new">
+                            Worker ID
+                        </span>
+
+                        <span class="info-value-new">
+                            {{ user["worker_id"] }}
+                        </span>
+
+                    </div>
+
+
+                    <!-- Username -->
+
+                    <div class="info-box">
+
+                        <div class="info-icon">
+                            🔐
+                        </div>
+
+                        <span class="info-label-new">
+                            Username
+                        </span>
+
+                        <span class="info-value-new">
+                            {{ user["username"] }}
+                        </span>
+
+                    </div>
+
+
+                    <!-- Department -->
+
+                    <div class="info-box">
+
+                        <div class="info-icon">
+                            🏭
+                        </div>
+
+                        <span class="info-label-new">
+                            Department
+                        </span>
+
+                        <span class="info-value-new">
+                            {{ user["department"] }}
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             QUICK ACTIONS
+        ================================================== -->
+
+        <section class="dashboard-section">
+
+            <div class="section-title">
+
+                <span>
+                    Safety Tools
+                </span>
+
+                <h2>
+                    Quick Actions
+                </h2>
+
+            </div>
+
+
+            <div class="action-grid-new">
+
+
+                <!-- Detection -->
+
+                <div class="action-card-new">
+
+                    <div class="action-icon-new camera-action">
+                        📷
+                    </div>
+
+                    <h3>
+                        Strip Detection
+                    </h3>
+
+                    <p>
+                        Use the camera or upload an image to
+                        analyze the visible response of the
+                        indicator strip.
+                    </p>
+
+                    <a
+                        href="{{ url_for('detection') }}"
+                        class="action-link"
+                    >
+                        Start Detection →
+                    </a>
+
+                </div>
+
+
+
+                <!-- History -->
+
+                <div class="action-card-new">
+
+                    <div class="action-icon-new history-action">
+                        📊
+                    </div>
+
+                    <h3>
+                        My History
+                    </h3>
+
+                    <p>
+                        Review your previous indicator-strip
+                        analysis records and results.
+                    </p>
+
+                    <a
+                        href="{{ url_for('history') }}"
+                        class="action-link"
+                    >
+                        View History →
+                    </a>
+
+                </div>
+
+
+
+                <!-- Simulator -->
+
+                <div class="action-card-new">
+
+                    <div class="action-icon-new simulator-action">
+                        🧪
+                    </div>
+
+                    <h3>
+                        Safe Simulator
+                    </h3>
+
+                    <p>
+                        Practice the software workflow using
+                        simulated visual strip responses.
+                    </p>
+
+                    <a
+                        href="{{ url_for('simulator') }}"
+                        class="action-link"
+                    >
+                        Open Simulator →
+                    </a>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             SAFETY NOTICE
+        ================================================== -->
+
+        <section class="safety-box">
+
+            <div class="safety-icon-new">
+                ⚠️
+            </div>
+
+
+            <div class="safety-content">
+
+                <h3>
+                    Important Safety Notice
+                </h3>
+
+                <p>
+                    This prototype analyzes the
+                    <span class="safety-highlight">
+                        visible color response
+                    </span>
+                    of an H₂S indicator strip.
+                    It does not directly measure or verify
+                    gas concentration in ppm.
+                </p>
+
+                <p>
+                    Use only prepared/reference indicator strips
+                    or the software simulator for demonstrations.
+                    <span class="safety-highlight">
+                        Do not generate or handle H₂S gas for testing.
+                    </span>
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             RESPONSIBLE USE
+        ================================================== -->
+
+        <section class="responsible-card">
+
+            <div class="responsible-icon">
+                🛡️
+            </div>
+
+            <div>
+
+                <strong>
+                    Responsible Use
+                </strong>
+
+                <p>
+                    The wristband prototype is a demonstration
+                    and decision-support concept. Follow your
+                    workplace safety procedures and do not rely
+                    on this prototype as a substitute for
+                    certified gas-monitoring equipment.
+                </p>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer class="worker-footer">
+
+        <p>
+            <strong>H₂S Smart Wristband</strong>
+            &nbsp;|&nbsp;
+            Worker Safety Monitoring System
+        </p>
+
+        <p>
+            Prototype • Visual Indicator Analysis • Responsible Safety Demonstration
+        </p>
+
+    </footer>
+
+
+</body>
+
+</html>

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>H₂S Strip Simulator</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #f2f7f7;
+            color: #17324d;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 14px max(24px, calc((100% - 1120px) / 2));
+            border-bottom: 1px solid #e1eaea;
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(14px);
+        }
+
+        header h1 {
+            color: #12354b;
+            font-size: 18px;
+            letter-spacing: -0.4px;
+        }
+
+        header nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        header nav a {
+            padding: 9px 12px;
+            border-radius: 9px;
+            color: #526579;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        header nav a:hover {
+            background: #eef8f7;
+            color: #087f8c;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 38px 24px 60px;
+        }
+
+        .title {
+            margin-bottom: 25px;
+        }
+
+        .eyebrow {
+            margin-bottom: 8px;
+            color: #0d9488;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+        }
+
+        .title h2 {
+            margin-bottom: 7px;
+            color: #12354b;
+            font-size: clamp(28px, 4vw, 36px);
+            letter-spacing: -1px;
+        }
+
+        .title p {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .card {
+            background: white;
+            padding: 27px;
+            border: 1px solid #e4ecec;
+            border-radius: 19px;
+            box-shadow: 0 8px 24px rgba(16, 42, 67, 0.045);
+            margin-bottom: 25px;
+        }
+
+        .card h3 {
+            color: #17324d;
+            font-size: 17px;
+            margin-bottom: 15px;
+        }
+
+        .levels {
+            display: grid;
+
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .level-button {
+            min-height: 58px;
+            padding: 12px 8px;
+            border: 1px solid #e0e8e9;
+            background: #fff;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 800;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .level-button:hover,
+        .level-button[aria-pressed="true"] {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 16px rgba(16, 42, 67, 0.08);
+        }
+
+        .level-button[aria-pressed="true"] {
+            border-width: 2px;
+        }
+
+        .level-button:focus-visible {
+            outline: 3px solid rgba(13, 148, 136, 0.3);
+            outline-offset: 2px;
+        }
+
+        .safe-choice[aria-pressed="true"] {
+            border-color: #22a06b;
+            background: #effaf4;
+        }
+
+        .warning-choice[aria-pressed="true"] {
+            border-color: #e2a72e;
+            background: #fff9e9;
+        }
+
+        .danger-choice[aria-pressed="true"] {
+            border-color: #e47739;
+            background: #fff3ec;
+        }
+
+        .very-high-choice[aria-pressed="true"] {
+            border-color: #c64747;
+            background: #fff0ef;
+        }
+
+        .strip-area {
+            text-align: center;
+            margin: 28px 0 22px;
+        }
+
+        .strip {
+            display: flex;
+            width: 142px;
+            height: 270px;
+            margin: 20px auto;
+            border: 5px solid #fff;
+            border-radius: 15px;
+            outline: 1px solid #dbe5e7;
+            box-shadow: 0 12px 28px rgba(16, 42, 67, 0.12);
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 20px;
+            writing-mode: vertical-rl;
+            transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+        }
+
+        .safe {
+            background: linear-gradient(180deg, #f8fafc, #dbe5e7);
+            color: #166534;
+        }
+
+        .warning {
+            background: linear-gradient(180deg, #fde68a, #facc15);
+            color: #713f12;
+        }
+
+        .danger {
+            background: linear-gradient(180deg, #fb923c, #ea580c);
+            color: white;
+        }
+
+        .very-high {
+            background: linear-gradient(180deg, #b91c1c, #7f1d1d);
+            color: white;
+        }
+
+        .result {
+            text-align: center;
+            padding: 21px;
+            border: 1px solid #e8eeee;
+            border-radius: 14px;
+            background: #f7fafa;
+        }
+
+        .result h2 {
+            margin: 7px 0;
+            color: #12354b;
+            font-size: 32px;
+            letter-spacing: -0.8px;
+        }
+
+        .note {
+            margin-top: 19px;
+            padding: 16px;
+            border: 1px solid #d7eaf7;
+            background: #eff8ff;
+            border-radius: 12px;
+            color: #55708b;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 750px) {
+            .levels {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            header {
+                position: static;
+                justify-content: center;
+                padding: 13px 12px;
+            }
+
+            header h1 {
+                width: 100%;
+                text-align: center;
+            }
+
+            .container {
+                padding: 26px 14px 42px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+    <h1>🛡️ H₂S Smart Wristband</h1>
+    <nav aria-label="Main navigation">
+        {% if session.get("role") == "manager" %}
+            <a href="{{ url_for('manager_dashboard') }}">Dashboard</a>
+        {% else %}
+            <a href="{{ url_for('worker_dashboard') }}">Dashboard</a>
+        {% endif %}
+        <a href="{{ url_for('detection') }}">Detection</a>
+        <a href="{{ url_for('history') }}">History</a>
+        <a href="{{ url_for('logout') }}">Log out</a>
+    </nav>
+</header>
+
+
+<div class="container">
+
+
+    <div class="title">
+    <p class="eyebrow">Safe visual practice</p>
+
+    <h2>H₂S Strip Simulator</h2>
+
+        <p>
+            Safe visual simulation of different indicator-strip responses
+        </p>
+
+    </div>
+
+
+    <!-- LEVEL SELECTION -->
+
+    <div class="card">
+
+        <h3>
+            Select Strip Response
+        </h3>
+
+
+        <div class="levels">
+
+            <button
+                class="level-button safe-choice"
+                type="button"
+                data-level="SAFE"
+                aria-pressed="true">
+
+                🟢 SAFE
+
+            </button>
+
+
+            <button
+                class="level-button warning-choice"
+                type="button"
+                data-level="WARNING"
+                aria-pressed="false">
+
+                🟡 WARNING
+
+            </button>
+
+
+            <button
+                class="level-button danger-choice"
+                type="button"
+                data-level="DANGER"
+                aria-pressed="false">
+
+                🟠 DANGER
+
+            </button>
+
+
+            <button
+                class="level-button very-high-choice"
+                type="button"
+                data-level="VERY HIGH"
+                aria-pressed="false">
+
+                🔴 VERY HIGH
+
+            </button>
+
+        </div>
+
+
+        <!-- STRIP -->
+
+        <div class="strip-area">
+
+            <h3>
+                Simulated Indicator Strip
+            </h3>
+
+
+            <div
+                id="strip"
+                class="strip safe">
+
+                SAFE
+
+            </div>
+
+        </div>
+
+
+        <!-- RESULT -->
+
+        <div class="result" aria-live="polite" aria-atomic="true">
+
+            <p>
+                Current Visual Response
+            </p>
+
+            <h2
+                id="result">
+
+                SAFE
+
+            </h2>
+
+            <p
+                id="description">
+
+                Low visual response
+
+            </p>
+
+        </div>
+
+
+        <div class="note">
+
+            <strong>Demo Safety Note:</strong>
+
+            <br>
+
+            This simulator represents visual states of a
+            chemical indicator strip for software demonstration.
+            It does not generate H₂S gas and does not measure
+            actual H₂S concentration.
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+
+function simulate(level) {
+    const strip =
+        document.getElementById("strip");
+
+    const result =
+        document.getElementById("result");
+
+    const description =
+        document.getElementById("description");
+
+    document.querySelectorAll(".level-button").forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.level === level));
+    });
+
+    strip.className = "strip";
+
+
+    if (level === "SAFE") {
+
+        strip.classList.add("safe");
+
+        strip.innerText = "SAFE";
+
+        result.innerText = "SAFE";
+
+        description.innerText =
+            "Low visual response";
+
+    }
+
+
+    else if (level === "WARNING") {
+
+        strip.classList.add("warning");
+
+        strip.innerText = "WARNING";
+
+        result.innerText = "WARNING";
+
+        description.innerText =
+            "Moderate visual response";
+
+    }
+
+
+    else if (level === "DANGER") {
+
+        strip.classList.add("danger");
+
+        strip.innerText = "DANGER";
+
+        result.innerText = "DANGER";
+
+        description.innerText =
+            "Strong visual response";
+
+    }
+
+
+    else if (level === "VERY HIGH") {
+
+        strip.classList.add("very-high");
+
+        strip.innerText = "VERY HIGH";
+
+        result.innerText = "VERY HIGH";
+
+        description.innerText =
+            "Very strong visual response";
+
+    }
+
+}
+
+document.querySelectorAll(".level-button").forEach((button) => {
+    button.addEventListener("click", () => simulate(button.dataset.level));
+});
+
+</script>
+
+
+</body>
+
+</html>

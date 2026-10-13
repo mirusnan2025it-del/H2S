@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Detection History</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #f2f7f7;
+            color: #17324d;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            padding: 14px max(24px, calc((100% - 1200px) / 2));
+            border-bottom: 1px solid #e1eaea;
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(14px);
+        }
+
+        header h1 {
+            color: #12354b;
+            font-size: 18px;
+            letter-spacing: -0.4px;
+        }
+
+        header a {
+            padding: 9px 12px;
+            border-radius: 9px;
+            color: #526579;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        header a:hover {
+            background: #eef8f7;
+            color: #087f8c;
+        }
+
+        header nav {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 3px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 38px 24px 60px;
+        }
+
+        .title {
+            margin-bottom: 20px;
+        }
+
+        .title h2 {
+            margin-bottom: 7px;
+            color: #12354b;
+            font-size: clamp(26px, 4vw, 34px);
+            letter-spacing: -1px;
+        }
+
+        .title p {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .history-tools {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin: 22px 0 14px;
+        }
+
+        .record-count {
+            color: #718096;
+            font-size: 12px;
+        }
+
+        .record-count strong {
+            color: #12354b;
+            font-size: 17px;
+        }
+
+        .search-input {
+            width: min(100%, 300px);
+            min-height: 42px;
+            padding: 10px 13px;
+            border: 1px solid #dce5e9;
+            border-radius: 10px;
+            outline: none;
+            background: white;
+            color: #17324d;
+            font-size: 13px;
+        }
+
+        .search-input:focus {
+            border-color: #0d9488;
+            box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.12);
+        }
+
+        .card {
+            background: white;
+            padding: 18px;
+            border: 1px solid #e4ecec;
+            border-radius: 18px;
+            box-shadow: 0 8px 24px rgba(16, 42, 67, 0.045);
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            border: 1px solid #e8eeee;
+            border-radius: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        th {
+            background: #f2f8f7;
+            color: #536a78;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+
+        th,
+        td {
+            padding: 13px;
+            text-align: left;
+        }
+
+        td {
+            border-bottom: 1px solid #edf1f1;
+            color: #526579;
+            font-size: 13px;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        tbody tr:hover {
+            background: #f8fbfb;
+        }
+
+        td:first-child {
+            color: #17324d;
+            font-weight: 700;
+        }
+
+        .badge {
+            display: inline-flex;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .safe {
+            background: #e5f7ee;
+            color: #16804a;
+        }
+
+        .warning {
+            background: #fff4db;
+            color: #98620b;
+        }
+
+        .danger {
+            background: #fff0ed;
+            color: #bd453c;
+        }
+
+        .very-high {
+            background: #7f1d1d;
+            color: white;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 48px 20px;
+            color: #718096;
+        }
+
+        .empty h3 {
+            margin-bottom: 7px;
+            color: #17324d;
+        }
+
+        .empty a {
+            display: inline-flex;
+            margin-top: 16px;
+            padding: 10px 14px;
+            border-radius: 9px;
+            background: #eaf7f5;
+            color: #087f8c;
+            font-size: 12px;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        @media (max-width: 700px) {
+
+            header {
+                position: static;
+                justify-content: center;
+                padding: 13px 12px;
+            }
+
+            header h1 {
+                width: 100%;
+                text-align: center;
+            }
+
+            header nav {
+                justify-content: center;
+            }
+
+            .container {
+                padding: 26px 14px 42px;
+            }
+
+            .history-tools {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .search-input {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+    <h1>🛡️ H₂S Smart Wristband</h1>
+    <nav aria-label="Main navigation">
+        {% if role == "manager" %}
+            <a href="{{ url_for('manager_dashboard') }}">Dashboard</a>
+        {% else %}
+            <a href="{{ url_for('worker_dashboard') }}">Dashboard</a>
+        {% endif %}
+        <a href="{{ url_for('detection') }}">Detection</a>
+        <a href="{{ url_for('simulator') }}">Simulator</a>
+        <a href="{{ url_for('logout') }}">Log out</a>
+    </nav>
+</header>
+
+
+<div class="container">
+
+
+    <section class="title">
+
+        {% if role == "manager" %}
+
+            <h2>All Detection History</h2>
+
+            <p>
+                Manager view — detection records from all workers
+            </p>
+
+        {% else %}
+
+            <h2>My Detection History</h2>
+
+            <p>
+                Your previous H₂S strip detection records
+            </p>
+
+        {% endif %}
+
+    </section>
+
+    <div class="history-tools">
+        <p class="record-count" aria-live="polite">
+            <strong id="recordCount">{{ records|length }}</strong>
+            <span id="recordWord">records</span>
+        </p>
+        {% if records %}
+            <input
+                class="search-input"
+                id="historySearch"
+                type="search"
+                placeholder="Search records, workers, or results..."
+                aria-label="Search detection history"
+            >
+        {% endif %}
+    </div>
+
+
+    <section class="card">
+
+
+        {% if records %}
+
+        <div class="table-wrap">
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+
+                    {% if role == "manager" %}
+
+                        <th>Worker</th>
+                        <th>Worker ID</th>
+
+                    {% endif %}
+
+                    <th>Date / Time</th>
+                    <th>Mode</th>
+                    <th>Result</th>
+                    <th>Response</th>
+                    <th>Color</th>
+                    <th>Confidence</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for record in records %}
+
+                <tr data-history-row>
+
+                    <td>
+                        {{ record["id"] }}
+                    </td>
+
+
+                    {% if role == "manager" %}
+
+                    <td>
+                        {{ record["name"] }}
+                    </td>
+
+                    <td>
+                        {{ record["worker_id"] }}
+                    </td>
+
+                    {% endif %}
+
+
+                    <td>
+                        {{ record["timestamp"] }}
+                    </td>
+
+
+                    <td>
+                        {{ record["mode"] }}
+                    </td>
+
+
+                    <td>
+
+                        {% if record["result"] == "SAFE" %}
+
+                            <span class="badge safe">
+                                SAFE
+                            </span>
+
+                        {% elif record["result"] == "WARNING" %}
+
+                            <span class="badge warning">
+                                WARNING
+                            </span>
+
+                        {% elif record["result"] == "DANGER" %}
+
+                            <span class="badge danger">
+                                DANGER
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge very-high">
+                                VERY HIGH
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+                        {{ record["response_level"] }}
+                    </td>
+
+
+                    <td>
+                        {{ record["dominant_color"] }}
+                    </td>
+
+
+                    <td>
+                        {{ record["confidence"] }}%
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+        </div>
+
+        <p class="empty" id="noSearchResults" hidden>No records match your search.</p>
+
+
+        {% else %}
+
+
+        <div class="empty">
+
+            <h3>No detection records yet</h3>
+
+            <p>
+                Perform a strip detection to create your first record.
+            </p>
+            <a href="{{ url_for('detection') }}">Start a detection</a>
+        </div>
+        {% endif %}
+
+    </section>
+
+
+</div>
+
+{% if records %}
+<script>
+    const historySearch = document.getElementById("historySearch");
+    const historyRows = Array.from(document.querySelectorAll("[data-history-row]"));
+    const recordCount = document.getElementById("recordCount");
+    const recordWord = document.getElementById("recordWord");
+    const noSearchResults = document.getElementById("noSearchResults");
+
+    historySearch.addEventListener("input", () => {
+        const query = historySearch.value.trim().toLocaleLowerCase();
+        let visibleRecords = 0;
+
+        historyRows.forEach((row) => {
+            const matches = row.textContent.toLocaleLowerCase().includes(query);
+            row.hidden = !matches;
+            visibleRecords += Number(matches);
+        });
+
+        recordCount.textContent = visibleRecords;
+        recordWord.textContent = visibleRecords === 1 ? "record" : "records";
+        noSearchResults.hidden = visibleRecords !== 0;
+    });
+</script>
+{% endif %}
+
+</body>
+
+</html>

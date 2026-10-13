@@ -1,0 +1,2776 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Strip Detection | H₂S Smart Wristband</title>
+
+
+    <style>
+
+        /* =====================================================
+           BASIC
+        ===================================================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            font-family: Arial, sans-serif;
+
+            background: #f4f7fb;
+
+            color: #1f2937;
+        }
+
+
+        /* =====================================================
+           NAVBAR
+        ===================================================== */
+
+        .navbar {
+
+            background: linear-gradient(
+                135deg,
+                #071b2d,
+                #123c55,
+                #087f8c
+            );
+
+            color: white;
+
+            padding: 18px 6%;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            box-shadow:
+                0 4px 20px
+                rgba(0,0,0,0.12);
+        }
+
+
+        .navbar h2 {
+
+            margin: 0;
+
+            font-size: 21px;
+        }
+
+
+        .nav-links {
+
+            display: flex;
+
+            gap: 24px;
+        }
+
+
+        .nav-links a {
+
+            color: white;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            opacity: 0.9;
+
+            transition: 0.2s;
+        }
+
+
+        .nav-links a:hover {
+
+            opacity: 1;
+
+            transform: translateY(-1px);
+        }
+
+
+        /* =====================================================
+           MAIN CONTAINER
+        ===================================================== */
+
+        .container {
+
+            width: 92%;
+
+            max-width: 1250px;
+
+            margin: 0 auto;
+
+            padding: 40px 0 60px;
+        }
+
+
+        /* =====================================================
+           TITLE
+        ===================================================== */
+
+        .title {
+
+            text-align: center;
+
+            margin-bottom: 35px;
+        }
+
+
+        .title-badge {
+
+            display: inline-block;
+
+            background: #e0f7f5;
+
+            color: #087f8c;
+
+            padding: 8px 16px;
+
+            border-radius: 30px;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            letter-spacing: 1px;
+
+            margin-bottom: 12px;
+        }
+
+
+        .title h1 {
+
+            margin: 0 0 10px;
+
+            color: #102a43;
+
+            font-size: 40px;
+        }
+
+
+        .title p {
+
+            margin: 0;
+
+            color: #64748b;
+
+            font-size: 16px;
+        }
+
+
+        /* =====================================================
+           GRID
+        ===================================================== */
+
+        .grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 28px;
+
+            align-items: start;
+        }
+
+
+        /* =====================================================
+           CARD
+        ===================================================== */
+
+        .card {
+
+            background: white;
+
+            padding: 28px;
+
+            border-radius: 22px;
+
+            box-shadow:
+                0 12px 35px
+                rgba(15, 23, 42, 0.08);
+
+            border:
+                1px solid #e5eaf0;
+        }
+
+
+        .card h2 {
+
+            margin-top: 0;
+
+            color: #102a43;
+
+            font-size: 22px;
+        }
+
+
+        .card-description {
+
+            color: #64748b;
+
+            line-height: 1.6;
+
+            font-size: 14px;
+        }
+
+
+        /* =====================================================
+           CAMERA BUTTON
+        ===================================================== */
+
+        #openCameraButton {
+
+            width: 100%;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #087f8c,
+                    #159a9c
+                );
+
+            color: white;
+
+            border: none;
+
+            padding: 15px;
+
+            border-radius: 12px;
+
+            cursor: pointer;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            transition: 0.25s;
+        }
+
+
+        #openCameraButton:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 8px 20px
+                rgba(8,127,140,0.25);
+        }
+
+
+        /* =====================================================
+           CAMERA
+        ===================================================== */
+
+        .camera-box {
+
+            display: none;
+
+            margin-top: 20px;
+
+            text-align: center;
+        }
+
+
+        #cameraVideo {
+
+            width: 100%;
+
+            max-height: 400px;
+
+            border-radius: 16px;
+
+            background: #081521;
+
+            object-fit: cover;
+        }
+
+
+        .camera-buttons {
+
+            display: flex;
+
+            gap: 10px;
+
+            margin-top: 12px;
+        }
+
+
+        .camera-buttons button {
+
+            flex: 1;
+
+            border: none;
+
+            padding: 13px;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+            font-weight: bold;
+        }
+
+
+        #captureButton {
+
+            background: #2563eb;
+
+            color: white;
+        }
+
+
+        #closeCameraButton {
+
+            background: #fee2e2;
+
+            color: #991b1b;
+        }
+
+
+        /* =====================================================
+           UPLOAD
+        ===================================================== */
+
+        .upload-box {
+
+            border:
+                2px dashed #aebdca;
+
+            border-radius: 16px;
+
+            padding: 25px;
+
+            text-align: center;
+
+            margin-top: 22px;
+
+            background: #f9fbfc;
+
+            transition: 0.25s;
+        }
+
+
+        .upload-box:hover {
+
+            border-color: #159a9c;
+
+            background: #f0fbfa;
+        }
+
+
+        .upload-icon {
+
+            font-size: 35px;
+
+            margin-bottom: 5px;
+        }
+
+
+        .upload-box p {
+
+            color: #64748b;
+
+            margin: 5px 0 10px;
+        }
+
+
+        input[type="file"] {
+
+            margin-top: 10px;
+
+            max-width: 100%;
+        }
+
+
+        /* =====================================================
+           IMAGE AREA
+        ===================================================== */
+
+        .image-area {
+
+            position: relative;
+
+            margin-top: 22px;
+
+            display: none;
+
+            text-align: center;
+
+            background: #f1f5f9;
+
+            padding: 12px;
+
+            border-radius: 16px;
+        }
+
+
+        #uploadedImage {
+
+            max-width: 100%;
+
+            max-height: 450px;
+
+            border-radius: 10px;
+
+            border:
+                1px solid #cbd5e1;
+
+            cursor: default;
+
+            display: block;
+
+            margin: auto;
+        }
+
+
+        /* =====================================================
+           AUTOMATIC DETECTION MESSAGE
+        ===================================================== */
+
+        .automatic-message {
+
+            margin-top: 12px;
+
+            padding: 12px;
+
+            background: #ecfdf5;
+
+            border:
+                1px solid #a7f3d0;
+
+            border-left:
+                4px solid #10b981;
+
+            border-radius: 10px;
+
+            color: #065f46;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+
+            text-align: left;
+        }
+
+
+        /* =====================================================
+           INSTRUCTION
+        ===================================================== */
+
+        .instruction {
+
+            margin-top: 20px;
+
+            padding: 16px;
+
+            background: #eff6ff;
+
+            border-left:
+                4px solid #2563eb;
+
+            border-radius: 10px;
+
+            color: #1e40af;
+
+            font-size: 13px;
+
+            line-height: 1.7;
+        }
+
+
+        /* =====================================================
+           BUTTONS
+        ===================================================== */
+
+        button {
+
+            border: none;
+
+            padding: 13px 22px;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            font-size: 15px;
+
+            margin-top: 15px;
+        }
+
+
+        #analyzeButton {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #4f46e5
+                );
+
+            color: white;
+
+            width: 100%;
+
+            font-weight: bold;
+
+            transition: 0.25s;
+        }
+
+
+        #analyzeButton:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 8px 20px
+                rgba(37,99,235,0.25);
+        }
+
+
+        #clearButton {
+
+            background: #e2e8f0;
+
+            color: #1e293b;
+
+            width: 100%;
+
+            font-weight: bold;
+        }
+
+
+        /* =====================================================
+           REFERENCE SCALE
+        ===================================================== */
+
+        .reference-intro {
+
+            color: #64748b;
+
+            line-height: 1.6;
+
+            font-size: 14px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .levels {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(6, 1fr);
+
+            gap: 8px;
+
+            margin-top: 20px;
+        }
+
+
+        .level {
+
+            height: 60px;
+
+            border-radius: 10px;
+
+            border:
+                1px solid #cbd5e1;
+
+            box-shadow:
+                inset 0 0 0 1px
+                rgba(255,255,255,0.2);
+        }
+
+
+        /* =====================================================
+           NEW REFERENCE COLORS
+        ===================================================== */
+
+        .l1 {
+
+            background:
+                rgb(255, 255, 255);
+        }
+
+
+        .l2 {
+
+            background:
+                rgb(255, 249, 196);
+        }
+
+
+        .l3 {
+
+            background:
+                rgb(255, 215, 0);
+        }
+
+
+        .l4 {
+
+            background:
+                rgb(210, 180, 140);
+        }
+
+
+        .l5 {
+
+            background:
+                rgb(139, 90, 43);
+        }
+
+
+        .l6 {
+
+            background:
+                rgb(0, 0, 0);
+        }
+
+
+        /* =====================================================
+           LEVEL LABELS
+        ===================================================== */
+
+        .level-labels {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(6, 1fr);
+
+            text-align: center;
+
+            font-size: 10px;
+
+            font-weight: bold;
+
+            color: #475569;
+
+            margin-top: 8px;
+        }
+
+
+        /* =====================================================
+           COLOR NAMES
+        ===================================================== */
+
+        .color-names {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(6, 1fr);
+
+            text-align: center;
+
+            font-size: 9px;
+
+            color: #64748b;
+
+            margin-top: 6px;
+
+            line-height: 1.3;
+        }
+
+
+        .ppm-ranges {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(6, 1fr);
+
+            text-align: center;
+
+            font-size: 9px;
+
+            color: #087f8c;
+
+            margin-top: 6px;
+
+            line-height: 1.3;
+
+            font-weight: bold;
+        }
+
+
+        /* =====================================================
+           RESULT
+        ===================================================== */
+
+        .result {
+
+            margin-top: 28px;
+
+            padding: 22px;
+
+            border-radius: 16px;
+
+            background: #f8fafc;
+
+            border:
+                1px solid #e2e8f0;
+
+            display: none;
+        }
+
+
+        .result h3 {
+
+            margin-top: 0;
+
+            color: #102a43;
+
+            font-size: 20px;
+        }
+
+
+        /* =====================================================
+           STATUS BADGE
+        ===================================================== */
+
+        #statusBadge {
+
+            text-align: center;
+
+            padding: 16px;
+
+            border-radius: 12px;
+
+            margin-bottom: 18px;
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+            background: #e2e8f0;
+
+            color: #1e293b;
+        }
+
+
+        .status-panel {
+
+            display: grid;
+
+            grid-template-columns: auto 1fr;
+
+            gap: 16px;
+
+            align-items: center;
+
+            padding: 18px;
+
+            margin-bottom: 18px;
+
+            border: 1px solid #dbe4ec;
+
+            border-radius: 14px;
+
+            background: #ffffff;
+        }
+
+
+        .status-icon {
+
+            width: 52px;
+
+            height: 52px;
+
+            display: grid;
+
+            place-items: center;
+
+            border-radius: 50%;
+
+            font-size: 26px;
+
+            background: #e2e8f0;
+        }
+
+
+        .status-panel strong,
+        .status-panel p {
+
+            display: block;
+
+            margin: 0;
+        }
+
+
+        .status-panel strong {
+
+            color: #102a43;
+
+            font-size: 19px;
+        }
+
+
+        .status-panel p {
+
+            margin-top: 4px;
+
+            color: #64748b;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+        }
+
+
+        .ppm-value {
+
+            font-size: 24px;
+
+            color: #102a43;
+        }
+
+
+        .ppm-range {
+
+            color: #087f8c;
+
+            font-weight: bold;
+        }
+
+
+        .toast {
+
+            position: fixed;
+
+            top: 92px;
+
+            left: 50%;
+
+            z-index: 2000;
+
+            display: grid;
+
+            grid-template-columns: auto 1fr auto;
+
+            align-items: center;
+
+            gap: 13px;
+
+            width: min(520px, calc(100% - 32px));
+
+            padding: 16px 18px;
+
+            border: 1px solid #cbd5e1;
+
+            border-top: 5px solid #18864b;
+
+            border-radius: 12px;
+
+            background: #ffffff;
+
+            box-shadow: 0 14px 35px rgba(15, 23, 42, 0.2);
+
+            opacity: 0;
+
+            transform: translate(-50%, -18px);
+
+            pointer-events: none;
+
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+
+        .toast.visible {
+
+            opacity: 1;
+
+            transform: translate(-50%, 0);
+
+        }
+
+
+        .toast-icon {
+
+            width: 38px;
+
+            height: 38px;
+
+            display: grid;
+
+            place-items: center;
+
+            border-radius: 50%;
+
+            background: #dcfce7;
+
+            color: #166534;
+
+            font-size: 21px;
+
+            font-weight: bold;
+        }
+
+
+        .toast strong,
+        .toast span {
+
+            display: block;
+        }
+
+
+        .toast strong {
+
+            color: #102a43;
+
+            margin-bottom: 3px;
+        }
+
+
+        .toast span {
+
+            color: #64748b;
+
+            font-size: 13px;
+
+            line-height: 1.45;
+        }
+
+
+        .toast-close {
+
+            width: 30px;
+
+            height: 30px;
+
+            margin: 0;
+
+            padding: 0;
+
+            border: 0;
+
+            background: transparent;
+
+            color: #64748b;
+
+            font-size: 22px;
+
+            line-height: 1;
+        }
+
+
+        .toast-close:hover {
+
+            background: #f1f5f9;
+
+            color: #102a43;
+
+            transform: none;
+        }
+
+
+        /* =====================================================
+           RESULT ITEMS
+        ===================================================== */
+
+        .result-item {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            padding: 13px 0;
+
+            border-bottom:
+                1px solid #e2e8f0;
+
+            gap: 15px;
+        }
+
+
+        .result-item:last-child {
+
+            border-bottom: none;
+        }
+
+
+        .result-item span:first-child {
+
+            color: #64748b;
+        }
+
+
+        .value {
+
+            font-weight: bold;
+
+            color: #102a43;
+
+            text-align: right;
+        }
+
+
+        /* =====================================================
+           LOADING
+        ===================================================== */
+
+        #loading {
+
+            display: none;
+
+            text-align: center;
+
+            margin-top: 18px;
+
+            padding: 15px;
+
+            background: #eff6ff;
+
+            color: #1d4ed8;
+
+            border-radius: 10px;
+
+            font-weight: bold;
+        }
+
+
+        /* =====================================================
+           ERROR
+        ===================================================== */
+
+        #errorMessage {
+
+            display: none;
+
+            margin-top: 18px;
+
+            padding: 14px;
+
+            background: #fee2e2;
+
+            color: #991b1b;
+
+            border-radius: 10px;
+
+            font-size: 14px;
+        }
+
+
+        /* =====================================================
+           SAFETY
+        ===================================================== */
+
+        .safety {
+
+            margin-top: 28px;
+
+            background: #fff7ed;
+
+            border:
+                1px solid #fed7aa;
+
+            border-left:
+                5px solid #f97316;
+
+            padding: 18px;
+
+            border-radius: 12px;
+
+            color: #7c2d12;
+
+            font-size: 13px;
+
+            line-height: 1.7;
+        }
+
+
+        .safety-title {
+
+            font-size: 17px;
+
+            font-weight: bold;
+
+            color: #9a3412;
+
+            margin-bottom: 10px;
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        footer {
+
+            background: #071b2d;
+
+            color: #cbd5e1;
+
+            text-align: center;
+
+            padding: 20px;
+
+            font-size: 12px;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 850px) {
+
+            .grid {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .nav-links {
+
+                gap: 10px;
+            }
+
+
+            .nav-links a {
+
+                font-size: 12px;
+            }
+
+
+            .title h1 {
+
+                font-size: 32px;
+            }
+        }
+
+
+        @media (max-width: 550px) {
+
+            .container {
+
+                width: 94%;
+            }
+
+
+            .navbar {
+
+                padding: 15px;
+            }
+
+
+            .navbar h2 {
+
+                font-size: 16px;
+            }
+
+
+            .nav-links {
+
+                display: none;
+            }
+
+
+            .card {
+
+                padding: 20px;
+            }
+
+
+            .camera-buttons {
+
+                flex-direction: column;
+            }
+
+
+            .levels {
+
+                gap: 4px;
+            }
+
+
+            .level {
+
+                height: 45px;
+            }
+
+
+            .level-labels {
+
+                font-size: 8px;
+            }
+
+
+            .color-names {
+
+                font-size: 7px;
+            }
+
+
+            .status-panel {
+
+                grid-template-columns: 1fr;
+
+                text-align: center;
+            }
+
+
+            .status-icon {
+
+                margin: auto;
+            }
+
+
+            .toast {
+
+                top: 78px;
+
+                width: calc(100% - 24px);
+            }
+        }
+
+
+            .toast {
+
+                padding: 14px;
+            }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="toast" id="statusToast" role="status" aria-live="polite">
+
+    <div class="toast-icon" id="toastIcon">✓</div>
+
+    <div>
+
+        <strong id="toastTitle">Detection complete</strong>
+
+        <span id="toastMessage"></span>
+
+    </div>
+
+    <button class="toast-close" id="toastClose" type="button" aria-label="Dismiss notification">
+        ×
+    </button>
+
+</div>
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<div class="navbar">
+
+    <h2>
+        H₂S Smart Wristband
+    </h2>
+
+
+    <div class="nav-links">
+
+        <a href="{{ url_for('manager_dashboard') if session.get('role') == 'manager' else url_for('worker_dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('detection') }}">
+            Detection
+        </a>
+
+        <a href="{{ url_for('history') }}">
+            History
+        </a>
+
+        <a href="{{ url_for('simulator') }}">
+            Simulator
+        </a>
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<div class="container">
+
+
+    <!-- TITLE -->
+
+    <div class="title">
+
+        <div class="title-badge">
+
+            WORKER SAFETY • VISUAL STRIP ANALYSIS
+
+        </div>
+
+
+        <h1>
+
+            Strip Detection
+
+        </h1>
+
+
+        <p>
+
+            Upload an indicator strip image or capture one
+            using your camera.
+
+        </p>
+
+    </div>
+
+
+
+    <div class="grid">
+
+
+        <!-- =================================================
+             LEFT CARD
+        ================================================= -->
+
+        <div class="card">
+
+
+            <h2>
+
+                📷 Capture / Upload Strip
+
+            </h2>
+
+
+            <p class="card-description">
+
+                Capture or upload a clear image of the indicator
+                strip. The system will automatically detect the
+                strip area and analyze its color.
+
+            </p>
+
+
+            <!-- OPEN CAMERA -->
+
+            <button
+                id="openCameraButton"
+            >
+
+                📷 Open Camera
+
+            </button>
+
+
+
+            <!-- CAMERA -->
+
+            <div
+                class="camera-box"
+                id="cameraBox"
+            >
+
+                <video
+                    id="cameraVideo"
+                    autoplay
+                    playsinline>
+                </video>
+
+
+                <div class="camera-buttons">
+
+                    <button
+                        id="captureButton"
+                    >
+
+                        📸 Capture
+
+                    </button>
+
+
+                    <button
+                        id="closeCameraButton"
+                    >
+
+                        ✖ Close Camera
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <canvas
+                id="cameraCanvas"
+                style="display:none;">
+            </canvas>
+
+
+
+            <!-- UPLOAD -->
+
+            <div class="upload-box">
+
+                <div class="upload-icon">
+
+                    🖼️
+
+                </div>
+
+
+                <p>
+
+                    Or select an image from your computer
+
+                </p>
+
+
+                <input
+                    type="file"
+                    id="imageInput"
+                    accept="image/*"
+                >
+
+            </div>
+
+
+
+            <!-- IMAGE -->
+
+            <div
+                class="image-area"
+                id="imageArea"
+            >
+
+                <img
+                    id="uploadedImage"
+                    alt="Indicator strip image"
+                >
+
+
+                <!-- AUTOMATIC DETECTION MESSAGE -->
+
+                <div class="automatic-message">
+
+                    <strong>
+                        🤖 Automatic Strip Detection
+                    </strong>
+
+                    <br>
+
+                    The system will automatically locate the
+                    indicator strip. No manual dragging or
+                    selection is required.
+
+                </div>
+
+            </div>
+
+
+
+            <!-- INSTRUCTION -->
+
+            <div class="instruction">
+
+                <strong>
+                    How to use
+                </strong>
+
+                <br><br>
+
+                1. Open the camera or upload an image.
+
+                <br>
+
+                2. Capture the strip if using the camera.
+
+                <br>
+
+                3. The system automatically detects the strip.
+
+                <br>
+
+                4. Click <b>Analyze Strip</b>.
+
+            </div>
+
+
+
+            <!-- ANALYZE -->
+
+            <button
+                id="analyzeButton"
+            >
+
+                🔍 Analyze Strip
+
+            </button>
+
+
+
+            <!-- CLEAR -->
+
+            <button
+                id="clearButton"
+            >
+
+                🗑 Clear
+
+            </button>
+
+
+
+            <!-- LOADING -->
+
+            <div id="loading">
+
+                ⏳ Automatically detecting and analyzing strip...
+
+            </div>
+
+
+
+            <!-- ERROR -->
+
+            <div id="errorMessage"></div>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             RIGHT CARD
+        ================================================= -->
+
+        <div class="card">
+
+
+            <h2>
+
+                🎨 Reference Color Scale
+
+            </h2>
+
+
+            <p class="reference-intro">
+
+                The software compares the automatically detected
+                strip color with six reference levels.
+
+            </p>
+
+
+
+            <!-- COLORS -->
+
+            <div class="levels">
+
+
+                <div
+                    class="level l1"
+                    title="LEVEL 1 - WHITE">
+                </div>
+
+
+                <div
+                    class="level l2"
+                    title="LEVEL 2 - PALE YELLOW">
+                </div>
+
+
+                <div
+                    class="level l3"
+                    title="LEVEL 3 - YELLOW">
+                </div>
+
+
+                <div
+                    class="level l4"
+                    title="LEVEL 4 - LIGHT BROWN">
+                </div>
+
+
+                <div
+                    class="level l5"
+                    title="LEVEL 5 - DARK BROWN">
+                </div>
+
+
+                <div
+                    class="level l6"
+                    title="LEVEL 6 - BLACK">
+                </div>
+
+            </div>
+
+
+
+            <!-- LEVEL NUMBERS -->
+
+            <div class="level-labels">
+
+                <div>LEVEL 1</div>
+
+                <div>LEVEL 2</div>
+
+                <div>LEVEL 3</div>
+
+                <div>LEVEL 4</div>
+
+                <div>LEVEL 5</div>
+
+                <div>LEVEL 6</div>
+
+            </div>
+
+
+
+            <!-- COLOR NAMES -->
+
+            <div class="color-names">
+
+                <div>WHITE</div>
+
+                <div>PALE YELLOW</div>
+
+                <div>YELLOW</div>
+
+                <div>LIGHT BROWN</div>
+
+                <div>DARK BROWN</div>
+
+                <div>BLACK</div>
+
+            </div>
+
+
+            <div class="ppm-ranges">
+
+                <div>0 ppm</div>
+
+                <div>0.03–0.5 ppm</div>
+
+                <div>1–5 ppm</div>
+
+                <div>5–10 ppm</div>
+
+                <div>10–20 ppm</div>
+
+                <div>20+ ppm</div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 RESULT
+            ================================================= -->
+
+            <div
+                class="result"
+                id="resultBox"
+            >
+
+
+                <h3>
+
+                    🔎 Detection Result
+
+                </h3>
+
+
+
+                <!-- STATUS -->
+
+                <div id="statusBadge">
+
+                    STATUS
+
+                </div>
+
+
+                <div class="status-panel" id="statusPanel">
+
+                    <div class="status-icon" id="statusIcon">?</div>
+
+                    <div>
+
+                        <strong id="statusTitle">Awaiting result</strong>
+
+                        <p id="statusMessage">Analyze a strip to see the safety status.</p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="result-item">
+
+                    <span>Estimated H₂S level</span>
+
+                    <span class="value ppm-value" id="ppmValue">-</span>
+
+                </div>
+
+
+                <div class="result-item">
+
+                    <span>PPM range</span>
+
+                    <span class="value ppm-range" id="ppmRange">-</span>
+
+                </div>
+
+
+
+                <!-- LEVEL -->
+
+                <div class="result-item">
+
+                    <span>
+
+                        Detected Level
+
+                    </span>
+
+
+                    <span
+                        class="value"
+                        id="resultLevel"
+                    >
+
+                        -
+
+                    </span>
+
+                </div>
+
+
+
+                <!-- RESPONSE -->
+
+                <div class="result-item">
+
+                    <span>
+
+                        Visual Response
+
+                    </span>
+
+
+                    <span
+                        class="value"
+                        id="responseLevel"
+                    >
+
+                        -
+
+                    </span>
+
+                </div>
+
+
+
+                <!-- CONFIDENCE -->
+
+                <div class="result-item">
+
+                    <span>
+
+                        Confidence
+
+                    </span>
+
+
+                    <span
+                        class="value"
+                        id="confidence"
+                    >
+
+                        -
+
+                    </span>
+
+                </div>
+
+
+
+                <!-- COLOR -->
+
+                <div class="result-item">
+
+                    <span>
+
+                        Dominant Color
+
+                    </span>
+
+
+                    <span
+                        class="value"
+                        id="dominantColor"
+                    >
+
+                        -
+
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 SAFETY
+            ================================================= -->
+
+            <div class="safety">
+
+
+                <div class="safety-title">
+
+                    ⚠️ Safety Notice
+
+                </div>
+
+
+                This prototype analyzes the visible color response
+                of an indicator strip.
+
+
+                <br><br>
+
+
+                It does not directly measure H₂S gas concentration
+                in ppm.
+
+
+                <br><br>
+
+
+                The simulator is for software demonstration only.
+                Do not generate or handle H₂S gas for testing.
+
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+    H₂S Smart Wristband |
+    Worker Safety Monitoring Prototype
+
+</footer>
+
+
+
+<script>
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const imageInput =
+    document.getElementById(
+        "imageInput"
+    );
+
+
+const uploadedImage =
+    document.getElementById(
+        "uploadedImage"
+    );
+
+
+const imageArea =
+    document.getElementById(
+        "imageArea"
+    );
+
+
+const openCameraButton =
+    document.getElementById(
+        "openCameraButton"
+    );
+
+
+const captureButton =
+    document.getElementById(
+        "captureButton"
+    );
+
+
+const closeCameraButton =
+    document.getElementById(
+        "closeCameraButton"
+    );
+
+
+const cameraBox =
+    document.getElementById(
+        "cameraBox"
+    );
+
+
+const cameraVideo =
+    document.getElementById(
+        "cameraVideo"
+    );
+
+
+const cameraCanvas =
+    document.getElementById(
+        "cameraCanvas"
+    );
+
+
+const analyzeButton =
+    document.getElementById(
+        "analyzeButton"
+    );
+
+
+const clearButton =
+    document.getElementById(
+        "clearButton"
+    );
+
+
+const loading =
+    document.getElementById(
+        "loading"
+    );
+
+
+const errorMessage =
+    document.getElementById(
+        "errorMessage"
+    );
+
+
+const resultBox =
+    document.getElementById(
+        "resultBox"
+    );
+
+
+const statusBadge =
+    document.getElementById(
+        "statusBadge"
+    );
+
+
+const statusPanel =
+    document.getElementById(
+        "statusPanel"
+    );
+
+
+const statusIcon =
+    document.getElementById(
+        "statusIcon"
+    );
+
+
+const statusTitle =
+    document.getElementById(
+        "statusTitle"
+    );
+
+
+const statusMessage =
+    document.getElementById(
+        "statusMessage"
+    );
+
+
+const statusToast =
+    document.getElementById(
+        "statusToast"
+    );
+
+
+const toastTitle =
+    document.getElementById(
+        "toastTitle"
+    );
+
+
+const toastMessage =
+    document.getElementById(
+        "toastMessage"
+    );
+
+
+const toastIcon =
+    document.getElementById(
+        "toastIcon"
+    );
+
+
+const toastClose =
+    document.getElementById(
+        "toastClose"
+    );
+
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+let cameraStream = null;
+
+let currentImageBlob = null;
+
+let alertAudioContext = null;
+
+let toastTimer = null;
+
+
+function playAlertSound(status) {
+
+    try {
+
+        const AudioContext =
+            window.AudioContext || window.webkitAudioContext;
+
+        if (!AudioContext) {
+            return;
+        }
+
+        if (!alertAudioContext) {
+            alertAudioContext = new AudioContext();
+        }
+
+        const startTime = alertAudioContext.currentTime;
+        const toneCount = status === "DANGER" ? 3 : status === "WARNING" ? 2 : 1;
+        const frequency = status === "DANGER" ? 440 : status === "WARNING" ? 660 : 880;
+
+        if (alertAudioContext.state === "suspended") {
+            alertAudioContext.resume();
+        }
+
+        for (let index = 0; index < toneCount; index += 1) {
+
+            const oscillator = alertAudioContext.createOscillator();
+            const gain = alertAudioContext.createGain();
+            const toneStart = startTime + (index * 0.18);
+
+            oscillator.type = "sine";
+            oscillator.frequency.value = frequency;
+            gain.gain.setValueAtTime(0.0001, toneStart);
+            gain.gain.exponentialRampToValueAtTime(0.12, toneStart + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.0001, toneStart + 0.14);
+
+            oscillator.connect(gain);
+            gain.connect(alertAudioContext.destination);
+            oscillator.start(toneStart);
+            oscillator.stop(toneStart + 0.15);
+        }
+
+    } catch (error) {
+
+        console.warn("Alert sound unavailable.", error);
+
+    }
+}
+
+
+toastClose.addEventListener("click", function () {
+    statusToast.classList.remove("visible");
+});
+
+
+/* =====================================================
+   OPEN CAMERA
+===================================================== */
+
+openCameraButton.addEventListener(
+
+    "click",
+
+    async function () {
+
+        errorMessage.style.display =
+            "none";
+
+
+        try {
+
+            cameraStream =
+                await navigator.mediaDevices
+                .getUserMedia({
+
+                    video: {
+
+                        facingMode: {
+
+                            ideal: "environment"
+
+                        }
+
+                    },
+
+                    audio: false
+
+                });
+
+
+            cameraVideo.srcObject =
+                cameraStream;
+
+
+            cameraBox.style.display =
+                "block";
+
+        }
+
+
+        catch (error) {
+
+            console.error(error);
+
+
+            errorMessage.innerText =
+                "Camera access was not allowed. Please allow camera permission in your browser.";
+
+
+            errorMessage.style.display =
+                "block";
+
+        }
+
+    }
+
+);
+
+
+/* =====================================================
+   CAPTURE CAMERA IMAGE
+===================================================== */
+
+captureButton.addEventListener(
+
+    "click",
+
+    function () {
+
+
+        if (!cameraStream) {
+
+            return;
+
+        }
+
+
+        const width =
+            cameraVideo.videoWidth;
+
+
+        const height =
+            cameraVideo.videoHeight;
+
+
+        if (
+            width === 0 ||
+            height === 0
+        ) {
+
+            errorMessage.innerText =
+                "Camera is not ready yet. Please wait a moment and try again.";
+
+
+            errorMessage.style.display =
+                "block";
+
+
+            return;
+
+        }
+
+
+        cameraCanvas.width =
+            width;
+
+
+        cameraCanvas.height =
+            height;
+
+
+        const context =
+            cameraCanvas.getContext(
+                "2d"
+            );
+
+
+        context.drawImage(
+
+            cameraVideo,
+
+            0,
+
+            0,
+
+            width,
+
+            height
+
+        );
+
+
+        cameraCanvas.toBlob(
+
+            function (blob) {
+
+
+                currentImageBlob =
+                    blob;
+
+
+                uploadedImage.onload =
+                    function () {
+
+                        imageArea.style.display =
+                            "block";
+
+
+                        resultBox.style.display =
+                            "none";
+
+                    };
+
+
+                uploadedImage.src =
+                    URL.createObjectURL(
+                        blob
+                    );
+
+
+                closeCamera();
+
+            },
+
+            "image/jpeg",
+
+            0.95
+
+        );
+
+    }
+
+);
+
+
+/* =====================================================
+   CLOSE CAMERA
+===================================================== */
+
+function closeCamera() {
+
+
+    if (cameraStream) {
+
+        cameraStream
+            .getTracks()
+            .forEach(
+
+                track =>
+                    track.stop()
+
+            );
+
+
+        cameraStream =
+            null;
+
+    }
+
+
+    cameraVideo.srcObject =
+        null;
+
+
+    cameraBox.style.display =
+        "none";
+
+}
+
+
+closeCameraButton.addEventListener(
+
+    "click",
+
+    closeCamera
+
+);
+
+
+/* =====================================================
+   UPLOAD IMAGE
+===================================================== */
+
+imageInput.addEventListener(
+
+    "change",
+
+    function () {
+
+
+        const file =
+            this.files[0];
+
+
+        if (!file) {
+
+            return;
+
+        }
+
+
+        currentImageBlob =
+            file;
+
+
+        const reader =
+            new FileReader();
+
+
+        reader.onload =
+            function (event) {
+
+
+                uploadedImage.src =
+                    event.target.result;
+
+
+                imageArea.style.display =
+                    "block";
+
+
+                resultBox.style.display =
+                    "none";
+
+
+                errorMessage.style.display =
+                    "none";
+
+            };
+
+
+        reader.readAsDataURL(
+            file
+        );
+
+    }
+
+);
+
+
+/* =====================================================
+   ANALYZE
+===================================================== */
+
+analyzeButton.addEventListener(
+
+    "click",
+
+    async function () {
+
+
+        errorMessage.style.display =
+            "none";
+
+
+        /* ---------------------------------------------
+           CHECK IMAGE
+        --------------------------------------------- */
+
+        if (!currentImageBlob) {
+
+            errorMessage.innerText =
+                "Please upload an image or capture one using the camera.";
+
+
+            errorMessage.style.display =
+                "block";
+
+
+            return;
+
+        }
+
+
+        /* ---------------------------------------------
+           SHOW LOADING
+        --------------------------------------------- */
+
+        loading.style.display =
+            "block";
+
+
+        resultBox.style.display =
+            "none";
+
+
+        analyzeButton.disabled =
+            true;
+
+
+        try {
+
+
+            /* =============================================
+               FORM DATA
+            ============================================= */
+
+            const formData =
+                new FormData();
+
+
+            formData.append(
+
+                "image",
+
+                currentImageBlob,
+
+                "strip.jpg"
+
+            );
+
+
+            /*
+             * IMPORTANT:
+             *
+             * We DO NOT send a manual crop here.
+             *
+             * The Python image_processor.py will
+             * automatically detect and crop the strip.
+             */
+
+
+            /* =============================================
+               SEND TO FLASK
+            ============================================= */
+
+            const response =
+                await fetch(
+
+                    "/api/analyze",
+
+                    {
+
+                        method: "POST",
+
+                        body: formData
+
+                    }
+
+                );
+
+
+            const data =
+                await response.json();
+
+
+            /* =============================================
+               CHECK RESPONSE
+            ============================================= */
+
+            if (!data.success) {
+
+                throw new Error(
+
+                    data.message ||
+                    "Analysis failed."
+
+                );
+
+            }
+
+
+            const status = data.status || data.result || "UNKNOWN";
+
+            const statusStyles = {
+                SAFE: {
+                    icon: "✓",
+                    background: "#dcfce7",
+                    color: "#166534",
+                    border: "#18864b",
+                    title: "SAFE"
+                },
+                WARNING: {
+                    icon: "!",
+                    background: "#fef3c7",
+                    color: "#92400e",
+                    border: "#d97706",
+                    title: "WARNING"
+                },
+                DANGER: {
+                    icon: "×",
+                    background: "#fee2e2",
+                    color: "#991b1b",
+                    border: "#dc2626",
+                    title: "DANGER"
+                }
+            };
+
+            const style =
+                statusStyles[status] || statusStyles.DANGER;
+
+            statusBadge.innerText =
+                style.icon + "  " + style.title;
+
+            statusBadge.style.background =
+                style.background;
+
+            statusBadge.style.color =
+                style.color;
+
+            statusIcon.innerText =
+                style.icon;
+
+            statusIcon.style.background =
+                style.background;
+
+            statusIcon.style.color =
+                style.color;
+
+            toastIcon.innerText =
+                style.icon;
+
+            toastIcon.style.background =
+                style.background;
+
+            toastIcon.style.color =
+                style.color;
+
+            statusPanel.style.borderColor =
+                style.border;
+
+            statusTitle.innerText =
+                style.title + " — " + (data.ppm_range || "Reading unavailable");
+
+            statusTitle.style.color =
+                style.color;
+
+            statusMessage.innerText =
+                data.status_message || "Review the detected strip reading.";
+
+            toastTitle.innerText =
+                style.title + " reading detected";
+
+            toastMessage.innerText =
+                (data.ppm_range || "Reading unavailable") + " — " +
+                (data.status_message || "Review the result.");
+
+            statusToast.style.borderTopColor =
+                style.border;
+
+            if (toastTimer) {
+                window.clearTimeout(toastTimer);
+            }
+
+            statusToast.classList.add("visible");
+
+            playAlertSound(status);
+
+            toastTimer = window.setTimeout(function () {
+                statusToast.classList.remove("visible");
+            }, 6500);
+
+
+            /* =============================================
+               SHOW RESULT
+            ============================================= */
+
+            document.getElementById(
+                "resultLevel"
+            ).innerText =
+                data.visual_level || data.result;
+
+
+            document.getElementById(
+                "ppmValue"
+            ).innerText =
+                data.ppm === 0 ? "0 ppm" : data.ppm + " ppm";
+
+
+            document.getElementById(
+                "ppmRange"
+            ).innerText =
+                data.ppm_range || "-";
+
+
+            document.getElementById(
+                "responseLevel"
+            ).innerText =
+                data.response_level;
+
+
+            document.getElementById(
+                "confidence"
+            ).innerText =
+                data.confidence + "%";
+
+
+            document.getElementById(
+                "dominantColor"
+            ).innerText =
+                data.dominant_color;
+
+
+            resultBox.style.display =
+                "block";
+
+        }
+
+
+        catch (error) {
+
+            console.error(error);
+
+
+            errorMessage.innerText =
+                error.message ||
+                "Image analysis failed.";
+
+
+            errorMessage.style.display =
+                "block";
+
+        }
+
+
+        finally {
+
+            loading.style.display =
+                "none";
+
+
+            analyzeButton.disabled =
+                false;
+
+        }
+
+    }
+
+);
+
+
+/* =====================================================
+   CLEAR
+===================================================== */
+
+clearButton.addEventListener(
+
+    "click",
+
+    function () {
+
+
+        closeCamera();
+
+
+        imageInput.value =
+            "";
+
+
+        uploadedImage.src =
+            "";
+
+
+        imageArea.style.display =
+            "none";
+
+
+        resultBox.style.display =
+            "none";
+
+
+        errorMessage.style.display =
+            "none";
+
+
+        loading.style.display =
+            "none";
+
+
+        currentImageBlob =
+            null;
+
+    }
+
+);
+
+
+/* =====================================================
+   STOP CAMERA WHEN PAGE CLOSES
+===================================================== */
+
+window.addEventListener(
+
+    "beforeunload",
+
+    function () {
+
+        closeCamera();
+
+    }
+
+);
+
+
+</script>
+
+
+</body>
+
+</html>

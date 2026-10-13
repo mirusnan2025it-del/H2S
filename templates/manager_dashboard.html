@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Manager Dashboard</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #f2f7f7;
+            color: #17324d;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding: 14px max(24px, calc((100% - 1200px) / 2));
+            background: rgba(255, 255, 255, 0.94);
+            border-bottom: 1px solid #e1eaea;
+            backdrop-filter: blur(14px);
+        }
+
+        header h1 {
+            color: #12354b;
+            font-size: 18px;
+            letter-spacing: -0.4px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            white-space: nowrap;
+        }
+
+        .brand-icon {
+            display: grid;
+            width: 40px;
+            height: 40px;
+            place-items: center;
+            border-radius: 13px;
+            background: linear-gradient(135deg, #0d9488, #0e7490);
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 6px 14px rgba(13, 148, 136, 0.2);
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .header-nav a {
+            padding: 9px 12px;
+            border-radius: 9px;
+            color: #526579;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .header-nav a:hover {
+            background: #eef8f7;
+            color: #087f8c;
+        }
+
+        .logout {
+            background: #fff1ef;
+            color: #bd453c !important;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 38px 24px 64px;
+        }
+
+        .welcome {
+            position: relative;
+            display: flex;
+            min-height: 205px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            overflow: hidden;
+            margin-bottom: 25px;
+            padding: 36px 40px;
+            border-radius: 26px;
+            background: linear-gradient(120deg, #082b3b 0%, #0b5260 58%, #0d9488 100%);
+            color: white;
+            box-shadow: 0 18px 40px rgba(7, 52, 65, 0.16);
+        }
+
+        .welcome::after {
+            position: absolute;
+            top: -110px;
+            right: 12%;
+            width: 300px;
+            height: 300px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 50%;
+            content: "";
+            box-shadow: 0 0 0 35px rgba(255, 255, 255, 0.035), 0 0 0 70px rgba(255, 255, 255, 0.025);
+            pointer-events: none;
+        }
+
+        .welcome-copy,
+        .welcome-status {
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome h2 {
+            margin-bottom: 8px;
+            color: white;
+            font-size: clamp(26px, 4vw, 36px);
+            letter-spacing: -1px;
+        }
+
+        .eyebrow {
+            margin-bottom: 10px;
+            color: #8ce6d6;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            position: relative;
+            overflow: hidden;
+            background: white;
+            padding: 21px 22px;
+            border: 1px solid #e4ecec;
+            border-radius: 17px;
+            box-shadow: 0 8px 24px rgba(16, 42, 67, 0.045);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 30px rgba(16, 42, 67, 0.09);
+        }
+
+        .stat-card::before {
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 4px;
+            background: var(--stat-accent, #0d9488);
+            content: "";
+        }
+
+        .stat-card h3 {
+            margin-bottom: 13px;
+            color: #718096;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .stat-number {
+            color: #12354b;
+            font-size: 34px;
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -1px;
+        }
+
+        .stat-workers { --stat-accent: #0d9488; }
+        .stat-detections { --stat-accent: #3b82f6; }
+        .stat-safe { --stat-accent: #22a06b; }
+        .stat-alerts { --stat-accent: #e28b25; }
+
+        .welcome-status {
+            min-width: 185px;
+            padding: 17px 19px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+        }
+
+        .welcome-status strong,
+        .welcome-status span {
+            display: block;
+        }
+
+        .welcome-status strong {
+            margin: 6px 0 3px;
+            color: white;
+            font-size: 15px;
+        }
+
+        .welcome-status span {
+            color: rgba(255, 255, 255, 0.72);
+            font-size: 11px;
+        }
+
+        .live-dot {
+            display: inline-block !important;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #75e0a3;
+            box-shadow: 0 0 0 4px rgba(117, 224, 163, 0.15);
+        }
+
+        .card {
+            background: white;
+            padding: 24px;
+            border: 1px solid #e4ecec;
+            border-radius: 19px;
+            box-shadow: 0 8px 24px rgba(16, 42, 67, 0.045);
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+            margin-bottom: 18px;
+            color: #12354b;
+            font-size: 19px;
+            letter-spacing: -0.3px;
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .section-heading p {
+            margin: -10px 0 18px;
+            color: #7a8a98;
+            font-size: 12px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border: 1px solid #e8eeee;
+            border-radius: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        th {
+            background: #f2f8f7;
+            color: #536a78;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+
+        th,
+        td {
+            padding: 14px 13px;
+            text-align: left;
+        }
+
+        td {
+            color: #526579;
+            font-size: 13px;
+            border-bottom: 1px solid #edf1f1;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        tbody tr:hover {
+            background: #f8fbfb;
+        }
+
+        td:first-child {
+            color: #17324d;
+            font-weight: 700;
+        }
+
+        .empty-state {
+            padding: 30px !important;
+            color: #718096 !important;
+            text-align: center;
+            white-space: normal;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .safe {
+            background: #e5f7ee;
+            color: #16804a;
+        }
+
+        .warning {
+            background: #fff4db;
+            color: #98620b;
+        }
+
+        .danger {
+            background: #fff0ed;
+            color: #bd453c;
+        }
+
+        .very-high {
+            background: #7f1d1d;
+            color: white;
+        }
+
+        .no-data {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .action-card {
+            position: relative;
+            overflow: hidden;
+            background: white;
+            border-radius: 20px;
+            padding: 27px;
+            border: 1px solid #e4ebf0;
+            box-shadow: 0 8px 30px rgba(16,42,67,0.06);
+            transition: 0.3s;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(16,42,67,0.11);
+        }
+
+        .action-card:focus-within {
+            outline: 3px solid rgba(13, 148, 136, 0.25);
+            outline-offset: 3px;
+        }
+
+        .action-icon {
+            width: 55px;
+            height: 55px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 27px;
+            margin-bottom: 17px;
+        }
+
+        .camera-action {
+            background: #e7f8f5;
+        }
+
+        .history-action {
+            background: #eaf1ff;
+        }
+
+        .simulator-action {
+            background: #fff5dc;
+        }
+
+        .action-card h3 {
+            margin: 0 0 8px;
+            color: #17324d;
+            font-size: 19px;
+        }
+
+        .action-card p {
+            margin: 0 0 20px;
+            color: #718096;
+            font-size: 13px;
+            line-height: 1.6;
+            min-height: 42px;
+        }
+
+        .action-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 800;
+            color: #087f8c;
+        }
+
+        .action-link:hover {
+            color: #065e68;
+        }
+
+        .flash-message {
+            margin-bottom: 20px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            background: #ecfdf5;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        @media (max-width: 900px) {
+
+            .stats {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .action-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            header {
+                position: static;
+                flex-wrap: wrap;
+                padding: 12px 16px;
+            }
+
+            .header-nav {
+                order: 3;
+                width: 100%;
+                overflow-x: auto;
+                justify-content: center;
+            }
+
+            .header-nav a {
+                padding: 8px;
+                font-size: 12px;
+            }
+
+            .brand {
+                flex: 1;
+            }
+
+            header h1 {
+                font-size: 15px;
+            }
+
+            .container {
+                padding: 24px 15px 44px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .action-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome {
+                min-height: auto;
+                align-items: flex-start;
+                flex-direction: column;
+                padding: 29px 24px;
+            }
+
+            .welcome-status {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+    <div class="brand">
+        <span class="brand-icon" aria-hidden="true">🛡️</span>
+        <h1>H₂S Smart Wristband</h1>
+    </div>
+    <nav class="header-nav" aria-label="Main navigation">
+        <a href="{{ url_for('manager_dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('detection') }}">Detection</a>
+        <a href="{{ url_for('history') }}">History</a>
+        <a href="{{ url_for('simulator') }}">Simulator</a>
+    </nav>
+    <a class="header-nav logout" href="{{ url_for('logout') }}">Log out</a>
+
+</header>
+
+
+<div class="container">
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="flash-message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+
+    <!-- WELCOME -->
+
+    <section class="welcome">
+        <div class="welcome-copy">
+            <div class="eyebrow">Manager safety overview</div>
+            <h2>Welcome, {{ name }}</h2>
+            <p>Review team activity and keep every safety record in view.</p>
+        </div>
+        <div class="welcome-status">
+            <span class="live-dot" aria-hidden="true"></span>
+            <strong>Team overview</strong>
+            <span>Worker records and latest readings</span>
+        </div>
+    </section>
+
+
+    <!-- STATISTICS -->
+
+    <div class="stats">
+
+
+        <div class="stat-card stat-workers">
+
+            <h3>Total Workers</h3>
+
+            <div class="stat-number">
+                {{ total_workers }}
+            </div>
+
+        </div>
+
+
+        <div class="stat-card stat-detections">
+
+            <h3>Total Detections</h3>
+
+            <div class="stat-number">
+                {{ total_detections }}
+            </div>
+
+        </div>
+
+
+        <div class="stat-card stat-safe">
+
+            <h3>Safe Records</h3>
+
+            <div class="stat-number">
+                {{ safe_records }}
+            </div>
+
+        </div>
+
+
+        <div class="stat-card stat-alerts">
+
+            <h3>Alerts</h3>
+
+            <div class="stat-number">
+                {{ alerts }}
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- WORKERS -->
+
+    <div class="card">
+
+        <div class="section-heading">
+            <div>
+                <h2>👷 Worker Safety Status</h2>
+                <p>Latest recorded strip result for each worker</p>
+            </div>
+        </div>
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Name</th>
+
+                        <th>Worker ID</th>
+
+                        <th>Department</th>
+
+                        <th>Latest Status</th>
+
+                        <th>Visual Response</th>
+
+                        <th>Confidence</th>
+
+                        <th>Last Detection</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                {% for worker in workers %}
+
+                    <tr>
+
+                        <td>
+                            {{ worker["name"] }}
+                        </td>
+
+                        <td>
+                            {{ worker["worker_id"] }}
+                        </td>
+
+                        <td>
+                            {{ worker["department"] }}
+                        </td>
+
+
+                        <td>
+
+                            {% if worker["latest_result"] == "SAFE" %}
+
+                                <span class="status safe">
+                                    SAFE
+                                </span>
+
+                            {% elif worker["latest_result"] == "WARNING" %}
+
+                                <span class="status warning">
+                                    WARNING
+                                </span>
+
+                            {% elif worker["latest_result"] == "DANGER" %}
+
+                                <span class="status danger">
+                                    DANGER
+                                </span>
+
+                            {% elif worker["latest_result"] == "VERY HIGH" %}
+
+                                <span class="status very-high">
+                                    VERY HIGH
+                                </span>
+
+                            {% else %}
+
+                                <span class="status no-data">
+                                    NO DATA
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if worker["latest_response"] %}
+
+                                {{ worker["latest_response"] }}
+
+                            {% else %}
+
+                                —
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if worker["latest_confidence"] %}
+
+                                {{ worker["latest_confidence"] }}%
+
+                            {% else %}
+
+                                —
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if worker["latest_time"] %}
+
+                                {{ worker["latest_time"] }}
+
+                            {% else %}
+
+                                No detection yet
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                {% if not workers %}
+                    <tr>
+                        <td class="empty-state" colspan="7">No worker records are available yet.</td>
+                    </tr>
+                {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- QUICK ACTIONS -->
+
+    <div class="card">
+
+        <h2>⚡ Safety Tools</h2>
+
+        <div class="action-grid">
+
+            <article class="action-card">
+                <div class="action-icon camera-action">📷</div>
+                <h3>Strip Detection</h3>
+                <p>Use the camera or upload an image to analyze the visible response of an indicator strip.</p>
+                <a href="{{ url_for('detection') }}" class="action-link">Start Detection →</a>
+            </article>
+
+            <article class="action-card">
+                <div class="action-icon history-action">📊</div>
+                <h3>All History</h3>
+                <p>Review strip-analysis records and results from all workers.</p>
+                <a href="{{ url_for('history') }}" class="action-link">View History →</a>
+            </article>
+
+            <article class="action-card">
+                <div class="action-icon simulator-action">🧪</div>
+                <h3>Safe Simulator</h3>
+                <p>Practice the software workflow using simulated visual strip responses.</p>
+                <a href="{{ url_for('simulator') }}" class="action-link">Open Simulator →</a>
+            </article>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>
